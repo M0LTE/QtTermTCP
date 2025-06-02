@@ -9,7 +9,10 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+            os: [ubuntu-latest, buntu-24.04-arm]
 
     steps:
     - uses: actions/checkout@v4
@@ -28,6 +31,6 @@ jobs:
     - name: Archive artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: QtTermTCP-linux-x64
+        name: QtTermTCP-${{ matrix.os }}
         path: |
           build/QtTermTCP
