@@ -16,7 +16,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        modules: serialport multimedia
+        modules: qtserialport qtmultimedia
     - name: qmake
       run: |
         mkdir build
