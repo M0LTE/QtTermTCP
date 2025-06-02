@@ -3943,29 +3943,18 @@ extern "C" void SaveSettings()
 
 #include <QCloseEvent>
 
-void QtTermTCP::closeEvent(QCloseEvent *event)
+void QtTermTCP::closeEvent(QCloseEvent* event)
 {
-	QMessageBox::StandardButton resBtn = QMessageBox::question(this, "QtTermTCP",
-		tr("Are you sure?\n"),
-		QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
-		QMessageBox::Yes);
-	if (resBtn != QMessageBox::Yes) {
-		event->ignore();
-	}
-	else
-	{
-		event->accept();
+	event->accept();
 #ifdef USESERIAL
-		if (hPTTDevice)
-			hPTTDevice->close();
+	if (hPTTDevice)
+		hPTTDevice->close();
 #endif
-		if (process)
-			process->close();
+	if (process)
+		process->close();
 
-		if (MHWindow)
-			MHWindow->close();
-
-	}
+	if (MHWindow)
+		MHWindow->close();
 }
 
 QtTermTCP::~QtTermTCP()
