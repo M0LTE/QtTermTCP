@@ -16,8 +16,12 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
     - name: Prep dir
-      run: mkdir build && pushd build
+      run: |
+        mkdir build
+        cd build
     - name: qmake
-      run: qmake ..
+      run: |
+        pwd
+        qmake ..
     - name: make
       run: make -j4
