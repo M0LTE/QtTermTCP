@@ -18,6 +18,7 @@ Requires:
 
 Notes:
 
+- It is probably possible to use Qt 5.15, I haven't checked. Maybe even Qt6.
 - In the Qt VS Tools extension, add a Qt installation named “5.14.2” pointed at C:\Qt\Qt5.14.2\5.14.2\msvc2017\bin - this is referenced from the project file
 - Run C:\Qt\Qt5.14.2\5.14.2\msvc2017\bin>windeployqt.exe C:\git\vps1.g8bpq.net\QtTermTCP\Win32\Debug
 
