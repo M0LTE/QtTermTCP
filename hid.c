@@ -154,7 +154,7 @@ static hid_device *new_hid_device()
 }
 
 
-static void register_error(hid_device *device, const char *op)
+static void register_error(hid_device *device)
 {
 	WCHAR *ptr, *msg;
 
@@ -542,19 +542,19 @@ HID_API_EXPORT hid_device * HID_API_CALL hid_open_path(const char *path)
 	// Check validity of write_handle.
 	if (dev->device_handle == INVALID_HANDLE_VALUE) {
 		// Unable to open the device.
-		register_error(dev, "CreateFile");
+		register_error(dev);
 		goto err;
 	}
 
 	// Get the Input Report length for the device.
 	res = HidD_GetPreparsedData(dev->device_handle, &pp_data);
 	if (!res) {
-		register_error(dev, "HidD_GetPreparsedData");
+		register_error(dev);
 		goto err;
 	}
 	nt_res = HidP_GetCaps(pp_data, &caps);
 	if (nt_res != HIDP_STATUS_SUCCESS) {
-		register_error(dev, "HidP_GetCaps");	
+		register_error(dev);	
 		goto err_pp_data;
 	}
 	dev->input_report_length = caps.InputReportByteLength;
@@ -585,7 +585,7 @@ int HID_API_EXPORT HID_API_CALL hid_write(hid_device *dev, const unsigned char *
 	if (!res) {
 		if (GetLastError() != ERROR_IO_PENDING) {
 			// WriteFile() failed. Return error.
-			register_error(dev, "WriteFile");
+			register_error(dev);
 			return -1;
 		}
 	}
@@ -595,7 +595,7 @@ int HID_API_EXPORT HID_API_CALL hid_write(hid_device *dev, const unsigned char *
 	res = GetOverlappedResult(dev->device_handle, &ol, &bytes_written, TRUE/*wait*/);
 	if (!res) {
 		// The Write operation failed.
-		register_error(dev, "WriteFile");
+		register_error(dev);
 		return -1;
 	}
 
@@ -663,7 +663,7 @@ int HID_API_EXPORT HID_API_CALL hid_read_timeout(hid_device *dev, unsigned char 
 
 	if (milliseconds >= 0) {
 		// See if there is any data yet.
-		res = WaitForSingleObject(ev, milliseconds);
+		res = (BOOLEAN)WaitForSingleObject(ev, milliseconds);
 		if (res != WAIT_OBJECT_0) {
 			// There was no data this time. Return zero bytes available,
 			// but leave the Overlapped I/O running.
@@ -696,7 +696,7 @@ int HID_API_EXPORT HID_API_CALL hid_read_timeout(hid_device *dev, unsigned char 
 	
 end_of_function:
 	if (!res) {
-		register_error(dev, "GetOverlappedResult");
+		register_error(dev);
 		return -1;
 	}
 	
@@ -718,7 +718,7 @@ int HID_API_EXPORT HID_API_CALL hid_send_feature_report(hid_device *dev, const u
 {
 	BOOLEAN res = HidD_SetFeature(dev->device_handle, (PVOID)data, length);
 	if (!res) {
-		register_error(dev, "HidD_SetFeature");
+		register_error(dev);
 		return -1;
 	}
 
@@ -751,7 +751,7 @@ int HID_API_EXPORT HID_API_CALL hid_get_feature_report(hid_device *dev, unsigned
 	if (!res) {
 		if (GetLastError() != ERROR_IO_PENDING) {
 			// DeviceIoControl() failed. Return error.
-			register_error(dev, "Send Feature Report DeviceIoControl");
+			register_error(dev);
 			return -1;
 		}
 	}
@@ -761,7 +761,7 @@ int HID_API_EXPORT HID_API_CALL hid_get_feature_report(hid_device *dev, unsigned
 	res = GetOverlappedResult(dev->device_handle, &ol, &bytes_returned, TRUE/*wait*/);
 	if (!res) {
 		// The operation failed.
-		register_error(dev, "Send Feature Report GetOverLappedResult");
+		register_error(dev);
 		return -1;
 	}
 	return bytes_returned;
@@ -786,7 +786,7 @@ int HID_API_EXPORT_CALL HID_API_CALL hid_get_manufacturer_string(hid_device *dev
 
 	res = HidD_GetManufacturerString(dev->device_handle, string, 2 * maxlen);
 	if (!res) {
-		register_error(dev, "HidD_GetManufacturerString");
+		register_error(dev);
 		return -1;
 	}
 
@@ -799,7 +799,7 @@ int HID_API_EXPORT_CALL HID_API_CALL hid_get_product_string(hid_device *dev, wch
 
 	res = HidD_GetProductString(dev->device_handle, string, 2 * maxlen);
 	if (!res) {
-		register_error(dev, "HidD_GetProductString");
+		register_error(dev);
 		return -1;
 	}
 
@@ -812,7 +812,7 @@ int HID_API_EXPORT_CALL HID_API_CALL hid_get_serial_number_string(hid_device *de
 
 	res = HidD_GetSerialNumberString(dev->device_handle, string, 2 * maxlen);
 	if (!res) {
-		register_error(dev, "HidD_GetSerialNumberString");
+		register_error(dev);
 		return -1;
 	}
 
@@ -825,7 +825,7 @@ int HID_API_EXPORT_CALL HID_API_CALL hid_get_indexed_string(hid_device *dev, int
 
 	res = HidD_GetIndexedString(dev->device_handle, string_index, string, 2 * maxlen);
 	if (!res) {
-		register_error(dev, "HidD_GetIndexedString");
+		register_error(dev);
 		return -1;
 	}
 

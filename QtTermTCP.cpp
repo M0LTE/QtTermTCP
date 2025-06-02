@@ -564,7 +564,7 @@ void AGWMonWindowClosing(Ui_ListenSession *Sess);
 void AGWWindowClosing(Ui_ListenSession *Sess);
 extern "C" void KISSDataReceived(void * socket, unsigned char * data, int length);
 void closeSerialPort();
-int newMHWindow(QObject * parent, int Type, const char * Label);
+int newMHWindow(int Type, const char * Label);
 
 extern void initUTF8();
 int checkUTF8(unsigned char * Msg, int Len, unsigned char * out);
@@ -940,7 +940,6 @@ bool QtTermTCP::eventFilter(QObject* obj, QEvent *event)
 					QClipboard *clipboard = QGuiApplication::clipboard();
 					QString Text = clipboard->text();
 					QByteArray ba = Text.toLocal8Bit();
-					char * Msg = ba.data();
 
 
 					Sess->inputWindow->paste();
@@ -1371,7 +1370,7 @@ QtTermTCP::QtTermTCP(QWidget *parent) : QMainWindow(parent)
 
 	if (KISSEnable && KISSMH)
 	{
-		newMHWindow(this, 0, "KISS MH");
+		newMHWindow(0, "KISS MH");
 		MHWindow->restoreGeometry(mysettings.value("MHgeometry").toByteArray());
 	}
 
@@ -4291,7 +4290,7 @@ void QtTermTCP::KISSaccept()
 
 	if (KISSEnable && KISSMH && MHWindow == 0)
 	{
-			newMHWindow(this, 0, "KISS MH");
+			newMHWindow(0, "KISS MH");
 			QSettings mysettings(GetConfPath(), QSettings::IniFormat);
 			MHWindow->restoreGeometry(mysettings.value("MHgeometry").toByteArray());
 	}
@@ -6698,7 +6697,6 @@ void QtTermTCP::KISSTimer()
  		if (m_serial && KISSConnected)
 		{
 			m_serial->clearError();
-			boolean rc = m_serial->isDataTerminalReady();
 
 			if (m_serial->error())
 			{
@@ -8064,7 +8062,7 @@ void WriteMonitorLog(Ui_ListenSession * Sess, char * Msg)
 
 
 
-int newMHWindow(QObject * parent, int Type, const char * Label)
+int newMHWindow(int Type, const char * Label)
 {
 	Ui_ListenSession * Sess = new(Ui_ListenSession);
 
@@ -8150,14 +8148,6 @@ int newMHWindow(QObject * parent, int Type, const char * Label)
 
 extern "C" void WritetoMHWindow(char * Buffer)
 {
-	unsigned char Copy[8192];
-	unsigned char * ptr1, *ptr2;
-	unsigned char Line[8192];
-	unsigned char out[8192];
-	int outlen;
-
-	int num;
-
 	if (MHWindow == NULL || MHWindow->monWindow == NULL)
 		return;
 

@@ -1241,7 +1241,6 @@ void timer_event()
 {
 	int  snd_ch, port;
 	single  frack;
-	Byte  active;
 	TAX25Port * AX25Sess;
 
 	TimerEvent = TIMER_EVENT_OFF;
@@ -1250,7 +1249,7 @@ void timer_event()
 	{
 		//reset the slottime timer
 
-		frack = frack_time[snd_ch];
+		frack = (float)frack_time[snd_ch];
 
 		for (port = 0; port < port_num; port++)
 		{
