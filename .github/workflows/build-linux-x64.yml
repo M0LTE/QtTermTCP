@@ -13,7 +13,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: prep
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+    - name: Prep dir
       run: mkdir build && pushd build
     - name: qmake
       run: qmake ..
