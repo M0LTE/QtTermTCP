@@ -471,7 +471,7 @@ KISSConnect::KISSConnect(QWidget *parent) : QDialog(parent)
 
 	scrollArea = new QScrollArea(this);
 	scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
-	scrollArea->setGeometry(QRect(5, 5, 260, 200));
+	scrollArea->setGeometry(QRect(5, 5, 420, 200));
 	scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	scrollArea->setWidgetResizable(false);
@@ -487,8 +487,8 @@ KISSConnect::KISSConnect(QWidget *parent) : QDialog(parent)
 
 	QHBoxLayout *mylayout = new QHBoxLayout();
 
-	Connected = new QRadioButton("Sesion");
-	UIMode = new QRadioButton("UI");
+	Connected = new QRadioButton("Connected mode");
+	UIMode = new QRadioButton("UI mode");
 	
 	mylayout->addWidget(new QLabel("Connection Mode"));
 	mylayout->addWidget(Connected);
@@ -515,7 +515,7 @@ KISSConnect::KISSConnect(QWidget *parent) : QDialog(parent)
 	wCallTo->setEditable(true);
 	wCallTo->setInsertPolicy(QComboBox::NoInsert);
 
-	formLayout2->addRow(new QLabel("Call To"), wCallTo);
+	formLayout2->addRow(new QLabel("Connect To"), wCallTo);
 
 	Digis = new QLineEdit();
 
